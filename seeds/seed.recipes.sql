@@ -4,7 +4,7 @@ TRUNCATE
   recipes,
   users
   RESTART IDENTITY CASCADE;
-psql -U postgres -d recipes_test -f ./seeds/seed/thingful_tables.sql
+psql -U dunder_mifflin -d recipes_test -f ./seeds/seed/thingful_tables.sql
 
 INSERT INTO users (first_name, last_name, email, password)
 VALUES

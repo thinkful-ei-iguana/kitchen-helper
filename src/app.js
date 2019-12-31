@@ -9,6 +9,7 @@ const { recipelistsRouter } = require("./recipe/recipes-router");
 const usersRouter = require("./users/users-router");
 const authRouter = require("./auth/auth-router");
 const morganOption = NODE_ENV === "production" ? "tiny" : "common";
+const pg = require("pg");
 
 app.use(morgan(morganOption));
 app.use(helmet());
@@ -22,6 +23,9 @@ app.get("/", (req, res) => {
   res.send("Would you like to make a new recipe?");
   res.send();
 });
+
+// check how to syntax this in order to add more tables etc
+// let addRecipe = pgclient.query("ADD COLUMN TO RECIPES")
 
 app.use(function errorHandler(error, req, res, next) {
   let response;
