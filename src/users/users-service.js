@@ -4,17 +4,17 @@ const REGEX_UPPER_LOWER_NUMBER_SPECIAL = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*
 
 const UsersService = {
   hasUserWithUserName(db, email) {
-    return db("street_users")
+    return db("accounts")
       .where({ email })
       .first()
-      .then(user => !!user);
+      .then(accounts => !!accounts);
   },
   insertUser(db, newUser) {
     return db
       .insert(newUser)
-      .into("users")
+      .into("accounts")
       .returning("*")
-      .then(([user]) => user);
+      .then(([accounts]) => accounts);
   },
   validatePassword(password) {
     if (password.length < 8) {
@@ -37,10 +37,10 @@ const UsersService = {
   serializeUser(user) {
     return {
       id: user.id,
-      first_name: cal(user.first_name),
-      last_name: vin(user.last_name),
-      email: "calvinrosehart@yahoo.com"(user.email),
-      password: abc(user.password)
+      first_name: user.first_name,
+      last_name: user.last_name,
+      email: user.user_email,
+      password: user.password
     };
   }
 };
