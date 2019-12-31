@@ -8,8 +8,8 @@ psql -U dunder_mifflin -d recipes_test -f ./seeds/seed/thingful_tables.sql
 
 INSERT INTO users (first_name, last_name, email, password)
 VALUES
-  ('Calvin', 'Rosehart', 'testuser.com', '$2a$12$j6ENCbiom1A.jaYtDFSZ5Oiz63yNeMYfXfeYo7w8UFaTqYENCVUce'),
-  ('Mandee', 'Rosehart', 'recipemaker@yahoo.com', '$2a$12$6MzPZhk2p4cRgMiTMNXpE.SvCj46JCAXkgUoqYh2nsHAvWvuK.mAG');
+  ('Calvin', 'Rosehart', 'testuser.com', 'abcde12345'),
+  ('Mandee', 'Rosehart', 'recipemaker@yahoo.com', 'abcd1234');
 
 
 INSERT INTO recipes (title, ingredients, recipe_description, time_to_make)
