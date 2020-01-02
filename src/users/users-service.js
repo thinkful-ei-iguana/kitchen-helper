@@ -1,20 +1,31 @@
+const xss = require("xss");
 const bcrypt = require("bcryptjs");
 
-const REGEX_UPPER_LOWER_NUMBER_SPECIAL = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&])[\S]/;
+const REGEX_UPPER_LOWER_NUMBER_SPECIAL = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&])[\S]+/;
 
-const UsersService = {
-  hasUserWithUserName(db, email) {
-    return db("accounts")
-      .where({ email })
+const AccountService = {
+  hasUserWithuser_name(db, user_name) {
+    return db("users")
+      .where({ user_name })
       .first()
-      .then(accounts => !!accounts);
+      .then(user => !!user);
   },
-  insertUser(db, newUser) {
+  insertUser(db, newAccount) {
     return db
-      .insert(newUser)
-      .into("accounts")
+      .insert(newAccount)
+      .into("users")
       .returning("*")
-      .then(([accounts]) => accounts);
+      .then(([user]) => user);
+  },
+  deleteUser(db, user_name) {
+    return db("users")
+      .where({ user_name })
+      .delete();
+  },
+  deleteListingsOfDeletedUser(db, user_name) {
+    return db("listings")
+      .where({ owner: user_name })
+      .delete();
   },
   validatePassword(password) {
     if (password.length < 8) {
@@ -31,18 +42,21 @@ const UsersService = {
     }
     return null;
   },
+
   hashPassword(password) {
     return bcrypt.hash(password, 12);
   },
-  serializeUser(user) {
+  serializeUser(accounts) {
     return {
-      id: user.id,
-      first_name: user.first_name,
-      last_name: user.last_name,
-      email: user.user_email,
-      password: user.password
+      id: accounts.id,
+      name: xss(accounts.name),
+      email: xss(accounts.email),
+      location: xss(accounts.location),
+      user_name: xss(accounts.user_name),
+      password: xss(accounts.password),
+      date_created: new Date(accounts.date_created)
     };
   }
 };
 
-module.exports = UsersService;
+module.exports = AccountService;
