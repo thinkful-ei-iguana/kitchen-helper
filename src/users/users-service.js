@@ -22,8 +22,8 @@ const AccountService = {
       .where({ user_name })
       .delete();
   },
-  deleteListingsOfDeletedUser(db, user_name) {
-    return db("listings")
+  deleteRecipesOfDeletedUser(db, user_name) {
+    return db("recipes")
       .where({ owner: user_name })
       .delete();
   },

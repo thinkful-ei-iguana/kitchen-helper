@@ -3,7 +3,7 @@ const recipesService = {
     return knex("recipes").select("*");
   },
   getAllByUser(knex, accounts) {
-    return knex("listings").where("owner", accounts);
+    return knex("recipes").where("owner", accounts);
   },
   getRecipeById(knex, id) {
     return knex("recipes")

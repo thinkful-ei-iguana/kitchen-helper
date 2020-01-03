@@ -20,7 +20,7 @@ recipeRouter.route("/:id").get((req, res, next) => {
   const knexInstance = req.app.get("db");
   const { id } = req.params;
   recipeService
-    .getRecipesById(knexInstance, id)
+    .getRecipeById(knexInstance, id)
     .then(recipes => {
       if (!recipes) {
         logger.error(`Recipe with id ${id} not found`);

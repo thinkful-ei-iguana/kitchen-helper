@@ -5,6 +5,8 @@ const helmet = require("helmet");
 const cors = require("cors");
 const { NODE_ENV } = require("./config");
 const app = express();
+const logger = require("logger");
+var sys = require("util");
 const recipeRouter = require("./recipe/recipes-router");
 const usersRouter = require("./users/users-router");
 const authRouter = require("./auth/auth-router");
@@ -13,17 +15,11 @@ const morganOption = NODE_ENV === "production" ? "tiny" : "common";
 app.use(morgan(morganOption));
 app.use(helmet());
 app.use(cors());
+app.use(express());
 
 app.use("/api/recipes", recipeRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/auth", authRouter);
-
-app.get("/", (req, res) => {
-  res.send("Kitchen Helper Application");
-  res.send();
-});
-
-// check how to syntax this in order to add more tables etc
 
 app.use(function errorHandler(error, req, res, next) {
   let response;
@@ -34,6 +30,10 @@ app.use(function errorHandler(error, req, res, next) {
     response = { message: error.message, error };
   }
   res.status(500).json(response);
+});
+
+app.get("/api/", (req, res) => {
+  res.send("Kitchen Helper Application");
 });
 
 module.exports = app;

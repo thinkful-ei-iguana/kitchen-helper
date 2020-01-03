@@ -88,7 +88,7 @@ usersRouter.route("/:user_name").delete((req, res, next) => {
   const knexInstance = req.app.get("db");
 
   UsersService.deleteUser(knexInstance, user_name)
-    .then(UsersService.deleteListingsOfDeletedUser(knexInstance, user_name))
+    .then(UsersService.deleteRecipesOfDeletedUser(knexInstance, user_name))
     .then(res.status(204).end())
     .catch(next);
 });
