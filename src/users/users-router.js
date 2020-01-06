@@ -24,12 +24,13 @@ usersRouter
   .route("/")
   .post(bodyParser, (req, res, next) => {
     const { first_name, user_name, user_email, password } = req.body;
-    for (const field of ["first_name", "user_name", "user_email", "password"])
-      if (!req.body[field])
+    for (const field of ["first_name", "user_name", "user_email", "password"]) {
+      if (!req.body[field]) {
         return res.status(400).json({
           error: `Missing '${field}' in request body`
         });
-
+      }
+    }
     const passwordError = UsersService.validatePassword(password);
 
     if (passwordError) {
@@ -93,7 +94,7 @@ usersRouter.route("/:user_name").delete((req, res, next) => {
     .catch(next);
 });
 
-usersRouter.route("/public/:user_name").get(bodyParser, (req, res, next) => {
+usersRouter.route("/src/:user_name").get(bodyParser, (req, res, next) => {
   const { user_name } = req.params;
   AuthService.getUserWithUserName(req.app.get("db"), user_name).then(dbUser => {
     delete dbUser.id;

@@ -16,14 +16,15 @@ recipeRouter.route("/").get((req, res, next) => {
     .catch(next);
 });
 
-recipeRouter.route("/:id").get((req, res, next) => {
+recipeRouter.route("/:title").get((req, res, next) => {
+  console.log(req.params);
   const knexInstance = req.app.get("db");
-  const { id } = req.params;
+  const { title } = req.params;
   recipeService
-    .getRecipeById(knexInstance, id)
+    .getRecipeByTitle(knexInstance, title)
     .then(recipes => {
       if (!recipes) {
-        logger.error(`Recipe with id ${id} not found`);
+        logger.error(`Recipe with title ${title} not found`);
         return res.status(404).send("Recipe not found");
       }
       res.json({
@@ -32,22 +33,23 @@ recipeRouter.route("/:id").get((req, res, next) => {
         recipe_description: recipes.recipe_description,
         recipe_ingredients: recipes.recipe_ingredients,
         time_to_make: recipes.time_to_make,
-        date_created: recipes.date_created
+        date_created: recipes.date_created,
+        created_by: recipes.created_by
       });
     })
     .catch(next);
 });
 
 recipeRouter
-  .route("/recipeById/:id")
+  .route("/recipeByTitle/:title")
   .get((req, res, next) => {
     const knexInstance = req.app.get("db");
-    const { id } = req.params;
+    const { title } = req.params;
     recipeService
-      .getRecipeById(knexInstance, id)
+      .getRecipeByTitle(knexInstance, title)
       .then(recipe => {
         if (!recipe) {
-          logger.error(`Recipe with id ${id} not found`);
+          logger.error(`Recipe with title ${title} not found`);
           return res.status(404).send("Recipe not found");
         }
         res.json({
@@ -56,22 +58,23 @@ recipeRouter
           description: xss(recipe.recipe_description),
           recipe_ingredients: recipe.recipe_ingredients,
           time_to_make: recipe.time_to_make,
-          date_created: recipe.date_created
+          date_created: recipe.date_created,
+          created_by: recipes.created_by
         });
       })
       .catch(next);
   })
   .delete((req, res, next) => {
     const knexInstance = req.app.get("db");
-    const { id } = req.params;
+    const { title } = req.params;
     recipeService
-      .deleteRecipe(knexInstance, id)
+      .deleteRecipe(knexInstance, title)
       .then(recipe => {
         if (recipe === -1) {
-          logger.error(`Recipe with id ${id} not found`);
+          logger.error(`Recipe with title ${title} not found`);
           return res.status(404).send("Recipe not found");
         }
-        logger.info(`Recipe with id ${id} has been deleted`);
+        logger.info(`Recipe with id ${title} has been deleted`);
         res.status(204).end();
       })
       .catch(next);

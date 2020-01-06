@@ -18,7 +18,7 @@ app.use(cors());
 app.use(express());
 
 app.use("/api/recipes", recipeRouter);
-app.use("/api/users", usersRouter);
+app.use("/api/accounts", usersRouter);
 app.use("/api/auth", authRouter);
 
 app.use(function errorHandler(error, req, res, next) {

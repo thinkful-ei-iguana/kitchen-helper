@@ -1,1 +1,12 @@
 {"message":"Recipe with id 0 not found","level":"error"}
+{"message":"Title is required","level":"error"}
+{"message":"Recipe with id of 4 was created","level":"info"}
+{"message":"Recipe with title SteW not found","level":"error"}
+{"message":"Recipe with title Breaasfd12e not found","level":"error"}
+{"message":"Recipe with title Milk not found","level":"error"}
+{"message":"Recipe with title undefined not found","level":"error"}
+{"message":"Recipe with title undefined not found","level":"error"}
+{"message":"Recipe with title undefined not found","level":"error"}
+{"message":"Recipe with id of 5 was created","level":"info"}
+{"message":"Recipe with title undefined not found","level":"error"}
+{"message":"Recipe with id of 4 was created","level":"info"}

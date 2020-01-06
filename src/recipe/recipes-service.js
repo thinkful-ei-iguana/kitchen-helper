@@ -5,10 +5,10 @@ const recipesService = {
   getAllByUser(knex, accounts) {
     return knex("recipes").where("owner", accounts);
   },
-  getRecipeById(knex, id) {
+  getRecipeByTitle(knex, title) {
     return knex("recipes")
       .select("*")
-      .where("id", id)
+      .where("title", title)
       .first();
   },
   insertRecipe(knex, newRecipe) {
