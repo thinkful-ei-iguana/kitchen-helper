@@ -32,8 +32,8 @@ app.use(function errorHandler(error, req, res, next) {
   res.status(500).json(response);
 });
 
-app.get("/api/", (req, res) => {
-  res.send("Kitchen Helper Application");
+app.get("/", (req, res) => {
+  res.send("Hello, boilerplate!");
 });
 
 module.exports = app;
