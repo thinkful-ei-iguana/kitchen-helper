@@ -27,6 +27,11 @@ const AccountService = {
       .where({ owner: user_name })
       .delete();
   },
+  updateAccount(knex, id, updatedData) {
+    return knex("accounts")
+      .where({ id })
+      .update(updatedData);
+  },
   validatePassword(password) {
     if (password.length < 8) {
       return "Password must be longer than 8 characters";
@@ -46,14 +51,14 @@ const AccountService = {
   hashPassword(password) {
     return bcrypt.hash(password, 12);
   },
-  serializeUser(accounts) {
+  serializeUser(user) {
     return {
-      id: accounts.id,
-      first_name: xss(accounts.first_name),
-      user_email: xss(accounts.user_email),
-      user_name: xss(accounts.user_name),
-      password: xss(accounts.password),
-      date_created: new Date(accounts.date_created)
+      id: user.id,
+      first_name: xss(user.first_name),
+      user_email: xss(user.user_email),
+      user_name: xss(user.user_name),
+      password: xss(user.password),
+      date_created: new Date(user.date_created)
     };
   }
 };

@@ -1,5 +1,6 @@
 const express = require("express");
 const usersRouter = express.Router();
+const logger = require("../logger");
 const bodyParser = express.json();
 const UsersService = require("./users-service");
 const path = require("path");
@@ -91,12 +92,68 @@ usersRouter.route("/:user_name").delete((req, res, next) => {
 usersRouter.route("/src/:user_name").get(bodyParser, (req, res, next) => {
   const { user_name } = req.params;
   AuthService.getUserWithUserName(req.app.get("db"), user_name).then(dbUser => {
-    delete dbUser.id;
+    // delete dbUser.id;
     delete dbUser.password;
     res.json({
       dbUser
     });
   });
+});
+
+usersRouter.patch("/edit/:id", bodyParser, async (req, res, next) => {
+  const knexInstance = req.app.get("db");
+  const { id } = req.params;
+  const { first_name, user_name, user_email, password } = req.body;
+  let updatedData = {
+    first_name,
+    user_name,
+    user_email
+  };
+
+  const numberOfValues = Object.values(updatedData).filter(Boolean).length;
+  if (numberOfValues === 0) {
+    return res.status(400).json({
+      error: {
+        message:
+          "Request body must contain either username, name, email, location, password or avatar"
+      }
+    });
+  }
+
+  if (user_name) {
+    const hasUserUsername = await UsersService.hasUserWithUserName(
+      req.app.get("db"),
+      user_name
+    );
+    if (hasUserUsername) {
+      return res.status(400).json({
+        error: "Username already taken"
+      });
+    } else {
+      updatedData.user_name = user_name;
+    }
+  }
+
+  if (password) {
+    const passwordError = UsersService.validatePassword(password);
+    if (passwordError) {
+      return res.status(400).json({
+        error: passwordError
+      });
+    }
+    await UsersService.hashPassword(password).then(hashedPassword => {
+      console.log(password);
+      updatedData.password = hashedPassword;
+    });
+  }
+
+  console.log(updatedData);
+  return UsersService.updateAccount(knexInstance, id, updatedData).then(
+    update => {
+      console.log(update, "update ran");
+      res.status(204).json(UsersService.serializeUser(update));
+    }
+  );
 });
 
 module.exports = usersRouter;
