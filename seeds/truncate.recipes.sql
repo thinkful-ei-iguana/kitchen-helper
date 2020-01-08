@@ -1,4 +1,4 @@
 TRUNCATE
   recipes,
-  users
+  accounts
   RESTART IDENTITY CASCADE;

@@ -1,10 +1,11 @@
-const path = require("path");
 const express = require("express");
-const recipeService = require("./recipes-service");
-const recipeRouter = express.Router();
 const logger = require("../logger");
 const bodyParser = express.json();
+const recipeRouter = express.Router();
+const recipeService = require("./recipes-service");
+const AccountService = require("../users/users-service");
 const xss = require("xss");
+const path = require("path");
 
 recipeRouter.route("/").get((req, res, next) => {
   const knexInstance = req.app.get("db");
@@ -16,65 +17,43 @@ recipeRouter.route("/").get((req, res, next) => {
     .catch(next);
 });
 
-recipeRouter.route("/:title").get((req, res, next) => {
-  console.log(req.params);
-  const knexInstance = req.app.get("db");
-  const { title } = req.params;
-  recipeService
-    .getRecipeByTitle(knexInstance, title)
-    .then(recipes => {
-      if (!recipes) {
-        logger.error(`Recipe with title ${title} not found`);
-        return res.status(404).send("Recipe not found");
-      }
-      res.json({
-        id: recipes.id,
-        title: recipes.title,
-        recipe_description: recipes.recipe_description,
-        recipe_ingredients: recipes.recipe_ingredients,
-        time_to_make: recipes.time_to_make,
-        date_created: recipes.date_created,
-        created_by: recipes.created_by
-      });
-    })
-    .catch(next);
-});
-
 recipeRouter
-  .route("/recipeByTitle/:title")
+  .route("/:id")
   .get((req, res, next) => {
     const knexInstance = req.app.get("db");
-    const { title } = req.params;
+    const { id } = req.params;
     recipeService
-      .getRecipeByTitle(knexInstance, title)
+      .getRecipeById(knexInstance, id)
       .then(recipe => {
         if (!recipe) {
-          logger.error(`Recipe with title ${title} not found`);
+          logger.error(`Recipe with id ${id} not found`);
           return res.status(404).send("Recipe not found");
+        } else {
+          res.json({
+            id: recipe.id,
+            title: recipe.title,
+            owner: recipe.owner,
+            recipe_description: xss(recipe.recipe_description),
+            recipe_ingredients: recipe.recipe_ingredients,
+            time_to_make: recipe.time_to_make,
+            date_created: recipe.date_created,
+            created_by: recipe.created_by
+          });
         }
-        res.json({
-          id: recipe.id,
-          title: recipe.title,
-          description: xss(recipe.recipe_description),
-          recipe_ingredients: recipe.recipe_ingredients,
-          time_to_make: recipe.time_to_make,
-          date_created: recipe.date_created,
-          created_by: recipes.created_by
-        });
       })
       .catch(next);
   })
   .delete((req, res, next) => {
     const knexInstance = req.app.get("db");
-    const { title } = req.params;
+    const { id } = req.params;
     recipeService
-      .deleteRecipe(knexInstance, title)
+      .deleteRecipe(knexInstance, id)
       .then(recipe => {
         if (recipe === -1) {
-          logger.error(`Recipe with title ${title} not found`);
+          logger.error(`Recipe with id ${id} not found`);
           return res.status(404).send("Recipe not found");
         }
-        logger.info(`Recipe with id ${title} has been deleted`);
+        logger.info(`Recipe with id ${id} has been deleted`);
         res.status(204).end();
       })
       .catch(next);
@@ -83,6 +62,7 @@ recipeRouter
 recipeRouter.route("/").post(bodyParser, (req, res, next) => {
   const {
     title,
+    owner,
     recipe_description,
     recipe_ingredients,
     time_to_make
@@ -110,6 +90,7 @@ recipeRouter.route("/").post(bodyParser, (req, res, next) => {
 
   const recipe = {
     title,
+    owner,
     recipe_description,
     recipe_ingredients,
     time_to_make
@@ -159,6 +140,7 @@ recipeRouter.patch("/edit/:id", bodyParser, (req, res, next) => {
   recipeService
     .updateRecipe(knexInstance, id, updatedData)
     .then(update => {
+      console.log(update);
       res.status(204).end();
     })
     .catch(next);

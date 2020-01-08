@@ -3,12 +3,19 @@ const recipesService = {
     return knex("recipes").select("*");
   },
   getAllByUser(knex, accounts) {
-    return knex("recipes").where("owner", accounts);
-  },
-  getRecipeByTitle(knex, title) {
     return knex("recipes")
       .select("*")
-      .where("title", title)
+      .where("owner", accounts);
+  },
+  getRecipeById(knex, id) {
+    return knex("recipes")
+      .select("*")
+      .where("id", id)
+      .first();
+  },
+  getRecipeOwnerData(knex, owner) {
+    return knex("users")
+      .where("owner", owner)
       .first();
   },
   insertRecipe(knex, newRecipe) {
