@@ -8,6 +8,7 @@ const recipesService = {
       .where("owner", accounts);
   },
   getRecipeById(knex, id) {
+    console.log(id, "getrecipebyid");
     return knex("recipes")
       .select("*")
       .where("id", id)

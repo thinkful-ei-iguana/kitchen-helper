@@ -100,6 +100,17 @@ usersRouter.route("/src/:user_name").get(bodyParser, (req, res, next) => {
   });
 });
 
+usersRouter.route("/src/:id").get(bodyParser, (req, res, next) => {
+  const { id } = req.params;
+  AuthService.getUserWithId(req.app.get("db"), id).then(dbUser => {
+    // delete dbUser.id;
+    delete dbUser.password;
+    res.json({
+      dbUser
+    });
+  });
+});
+
 usersRouter.patch("/edit/:id", bodyParser, async (req, res, next) => {
   const knexInstance = req.app.get("db");
   const { id } = req.params;

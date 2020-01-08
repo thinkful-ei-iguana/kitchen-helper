@@ -25,10 +25,13 @@ recipeRouter
     recipeService
       .getRecipeById(knexInstance, id)
       .then(recipe => {
+        console.log(recipe, "hello");
         if (!recipe) {
-          logger.error(`Recipe with id ${id} not found`);
+          console.log("I'm the bad router");
+          logger.error(`Recipe with id ${recipe.id} not found`);
           return res.status(404).send("Recipe not found");
         } else {
+          console.log("I'm the good router");
           res.json({
             id: recipe.id,
             title: recipe.title,
@@ -50,9 +53,11 @@ recipeRouter
       .deleteRecipe(knexInstance, id)
       .then(recipe => {
         if (recipe === -1) {
+          console.log("I'm the second logger");
           logger.error(`Recipe with id ${id} not found`);
           return res.status(404).send("Recipe not found");
         }
+        console.log("I'm the third logger");
         logger.info(`Recipe with id ${id} has been deleted`);
         res.status(204).end();
       })
@@ -102,6 +107,7 @@ recipeRouter.route("/").post(bodyParser, (req, res, next) => {
     .insertRecipe(knexInstance, recipe)
     .then(recipe => {
       const { id } = recipe;
+      console.log("I'm the fourth logger");
       logger.info(`Recipe with id of ${id} was created`);
       res
         .status(201)
