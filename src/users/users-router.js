@@ -35,6 +35,7 @@ usersRouter
     const passwordError = UsersService.validatePassword(password);
 
     if (passwordError) {
+      console.log(passwordError, "errorer");
       return res.status(400).json({ error: passwordError });
     }
     UsersService.hasUserWithUserName(req.app.get("db"), user_name)
@@ -148,6 +149,9 @@ usersRouter.patch("/edit/:id", bodyParser, async (req, res, next) => {
   if (password) {
     const passwordError = UsersService.validatePassword(password);
     if (passwordError) {
+      console.log(passwordError);
+      console.log(this.props);
+      console.log("hi");
       return res.status(400).json({
         error: passwordError
       });
