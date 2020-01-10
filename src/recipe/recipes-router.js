@@ -1,7 +1,7 @@
 const express = require("express");
+const recipeRouter = express.Router();
 const logger = require("../logger");
 const bodyParser = express.json();
-const recipeRouter = express.Router();
 const recipeService = require("./recipes-service");
 const AccountService = require("../users/users-service");
 const xss = require("xss");
@@ -140,6 +140,7 @@ recipeRouter.patch("/edit/:id", bodyParser, (req, res, next) => {
   recipeService
     .updateRecipe(knexInstance, id, updatedData)
     .then(update => {
+      console.log(update);
       res.status(204).end();
     })
     .catch(next);

@@ -159,6 +159,7 @@ usersRouter.patch("/edit/:id", bodyParser, async (req, res, next) => {
 
   return UsersService.updateAccount(knexInstance, id, updatedData).then(
     update => {
+      console.log(update, "update ran");
       res.status(204).json(UsersService.serializeUser(update));
     }
   );
