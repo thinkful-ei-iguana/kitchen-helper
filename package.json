@@ -2,7 +2,7 @@
   "name": "kitchen-helper",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "migrate": "postgrator --config postgrator-config.js",
     "test": "mocha --require test/setup.js",
