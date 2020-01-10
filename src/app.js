@@ -10,7 +10,7 @@ var sys = require("util");
 const recipeRouter = require("./recipe/recipes-router");
 const usersRouter = require("./users/users-router");
 const authRouter = require("./auth/auth-router");
-const morganSetting = NODE_ENV === "production" ? "tiny" : "common";
+const morganSetting = process.env.NODE_ENV === "production" ? "tiny" : "common";
 
 app.use(morgan(morganSetting));
 app.use(helmet());
