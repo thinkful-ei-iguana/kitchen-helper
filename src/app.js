@@ -10,9 +10,9 @@ var sys = require("util");
 const recipeRouter = require("./recipe/recipes-router");
 const usersRouter = require("./users/users-router");
 const authRouter = require("./auth/auth-router");
-const morganOption = NODE_ENV === "production" ? "tiny" : "common";
+const morganSetting = NODE_ENV === "production" ? "tiny" : "common";
 
-app.use(morgan(morganOption));
+app.use(morgan(morganSetting));
 app.use(helmet());
 app.use(cors());
 app.use(express());
@@ -25,7 +25,7 @@ app.use("/api/auth", authRouter);
 
 app.use((error, req, res, next) => {
   let response;
-  if (process.env.NODE_ENV === "production") {
+  if (NODE_ENV === "production") {
     response = { error: { message: "server error" } };
   } else {
     response = { error };
@@ -33,6 +33,6 @@ app.use((error, req, res, next) => {
   res.status(500).json(response);
 });
 
-const PORT = process.env.PORT || 8000;
+// const PORT = process.env.PORT || 8000;
 
 module.exports = app;
