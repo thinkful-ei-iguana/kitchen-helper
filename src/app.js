@@ -34,6 +34,10 @@ app.use((error, req, res, next) => {
   res.status(500).json(response);
 });
 
+app.get("/api/", (req, res) => {
+  res.send("Hello, world!");
+});
+
 // const PORT = process.env.PORT || 8000;
 
 module.exports = app;
