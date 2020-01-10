@@ -153,15 +153,12 @@ usersRouter.patch("/edit/:id", bodyParser, async (req, res, next) => {
       });
     }
     await UsersService.hashPassword(password).then(hashedPassword => {
-      console.log(password);
       updatedData.password = hashedPassword;
     });
   }
 
-  console.log(updatedData);
   return UsersService.updateAccount(knexInstance, id, updatedData).then(
     update => {
-      console.log(update, "update ran");
       res.status(204).json(UsersService.serializeUser(update));
     }
   );

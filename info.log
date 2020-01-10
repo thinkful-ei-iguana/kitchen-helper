@@ -350,3 +350,4 @@
 {"message":"Recipe with id 4 not found","level":"error"}
 {"message":"Recipe with id 4 not found","level":"error"}
 {"message":"Recipe with id 4 not found","level":"error"}
+{"message":"Recipe with id 34 has been deleted","level":"info"}

@@ -20,9 +20,9 @@ app.use(express());
 app.use("/api/recipes", recipeRouter);
 app.use("/api/accounts", usersRouter);
 app.use("/api/auth", authRouter);
-console.log(
-  "Remove console.logs, check the recipes-router line 30ish in the backend, do media queries for mobile phones"
-);
+// console.log(
+//   "Remove console.logs, check the recipes-router line 30ish in the backend, do media queries for mobile phones"
+// );
 
 app.use(function errorHandler(error, req, res, next) {
   let response;
