@@ -20,23 +20,19 @@ app.use(express());
 app.use("/api/recipes", recipeRouter);
 app.use("/api/accounts", usersRouter);
 app.use("/api/auth", authRouter);
-// console.log(
-//   "Remove console.logs, check the recipes-router line 30ish in the backend, do media queries for mobile phones"
-// );
 
-app.use(function errorHandler(error, req, res, next) {
+//   "Remove console.logs, check the recipes-router line 30ish in the backend, do media queries for mobile phones"
+
+app.use((error, req, res, next) => {
   let response;
-  if (NODE_ENV === "production") {
+  if (process.env.NODE_ENV === "production") {
     response = { error: { message: "server error" } };
   } else {
-    console.error(error);
-    response = { message: error.message, error };
+    response = { error };
   }
   res.status(500).json(response);
 });
 
-app.get("/", (req, res) => {
-  res.send("Hello, boilerplate!");
-});
+const PORT = process.env.PORT || 8000;
 
 module.exports = app;

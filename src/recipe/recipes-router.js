@@ -102,7 +102,6 @@ recipeRouter.route("/").post(bodyParser, (req, res, next) => {
     .insertRecipe(knexInstance, recipe)
     .then(recipe => {
       const { id } = recipe;
-      console.log("I'm the fourth logger");
       logger.info(`Recipe with id of ${id} was created`);
       res
         .status(201)
@@ -141,7 +140,6 @@ recipeRouter.patch("/edit/:id", bodyParser, (req, res, next) => {
   recipeService
     .updateRecipe(knexInstance, id, updatedData)
     .then(update => {
-      console.log(update);
       res.status(204).end();
     })
     .catch(next);
