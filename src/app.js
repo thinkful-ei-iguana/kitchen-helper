@@ -25,6 +25,7 @@ app.use("/api/auth", authRouter);
 
 app.use((error, req, res, next) => {
   let response;
+  console.log(NODE_ENV);
   if (NODE_ENV === "production") {
     response = { error: { message: "server error" } };
   } else {
