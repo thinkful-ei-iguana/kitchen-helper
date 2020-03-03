@@ -17,6 +17,31 @@ recipeRouter.route("/").get((req, res, next) => {
     .catch(next);
 });
 
+recipeRouter.route("/user/owner").get((req, res, next) => {
+  const knexInstance = req.app.get("db");
+  recipeService
+    .getAllByUser(knexInstance)
+    .then(recipes => {
+      if (!recipes) {
+        logger.error(`Recipes with owner ${recipe.owner} not found`);
+        return res.status(404).send("No recipes by this owner found")
+      } else {
+        res.json({
+          id: recipe.id,
+          title: recipe.title,
+          owner: recipe.owner,
+          recipe_description: xss(recipe.recipe_description),
+          recipe_ingredients: recipe.recipe_ingredients,
+          time_to_make: recipe.time_to_make,
+          date_created: recipe.date_created,
+          created_by: recipe.created_by
+        });
+      }
+    })
+    .catch(next);
+})
+
+
 recipeRouter
   .route("/:id")
   .get((req, res, next) => {
@@ -111,39 +136,44 @@ recipeRouter.route("/").post(bodyParser, (req, res, next) => {
     .catch(next);
 });
 
-recipeRouter.patch("/edit/:id", bodyParser, (req, res, next) => {
-  const knexInstance = req.app.get("db");
-  const { id } = req.params;
-  const {
-    title,
-    recipe_description,
-    recipe_ingredients,
-    time_to_make
-  } = req.body;
-  const updatedData = {
-    title,
-    recipe_description,
-    recipe_ingredients,
-    time_to_make
-  };
+recipeRouter
+  .route("/edit/id")
+  .patch(bodyParser, (req, res, next) => {
+    const knexInstance = req.app.get("db");
+    const { id } = req.params;
+    let { title, recipe_description, recipe_ingredients, time_to_make } = req.body;
+    let updatedRecipe = { title, recipe_description, recipe_ingredients, time_to_make };
+    let recipeId = req.body.id;
+    recipesService
+      .updateRecipe(req.app.get("db"), updatedRecipe, recipeId)
+      .then(updatedRecipeResponse => {
+        res.status(201).json({
+          title: updatedRecipeResponse.title,
+          recipe_description: updatedRecipeResponse.recipe_description,
+          recipe_ingredients: updatedRecipeResponse.recipe_ingredients,
+          time_to_make: updatedRecipeResponse.time_to_make
+        });
+      }).catch(err => {
+        next(err);
+      });
 
-  const numberOfValues = Object.values(updatedData).filter(Boolean).length;
-  if (numberOfValues === 0) {
-    return res.status(400).json({
-      error: {
-        message:
-          "Request body must contain either 'title', 'recipe desription', 'recipe ingredients or 'time to make'"
-      }
-    });
-  }
+    const numberOfValues = Object.values(updatedData).filter(Boolean).length;
+    if (numberOfValues === 0) {
+      return res.status(400).json({
+        error: {
+          message:
+            "Request body must contain either 'title', 'recipe desription', 'recipe ingredients or 'time to make'"
+        }
+      });
+    }
 
-  recipeService
-    .updateRecipe(knexInstance, id, updatedData)
-    .then(update => {
-      console.log(update);
-      res.status(204).end();
-    })
-    .catch(next);
-});
+    recipeService
+      .updateRecipe(knexInstance, id, updatedData)
+      .then(update => {
+        console.log(update);
+        res.status(204).end();
+      })
+      .catch(next);
+  });
 
 module.exports = recipeRouter;

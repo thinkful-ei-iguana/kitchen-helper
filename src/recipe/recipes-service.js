@@ -29,10 +29,10 @@ const recipesService = {
       .where({ id })
       .delete();
   },
-  updateRecipe(knex, id, updatedData) {
+  updateRecipe(knex, id, updatedRecipe) {
     return knex("recipes")
       .where({ id })
-      .update(updatedData);
+      .update(updatedRecipe);
   }
 };
 
