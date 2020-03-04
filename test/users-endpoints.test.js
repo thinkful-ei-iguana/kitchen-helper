@@ -46,7 +46,7 @@ describe("Users Endpoint", function () {
             .post("/api/accounts")
             .send(registerAttemptBody)
             .expect(400, {
-              error: `Something went wrong. Please try again.`,
+              error: "Missing 'user_email' in request body",
             })
         });
       });
@@ -56,7 +56,7 @@ describe("Users Endpoint", function () {
           user_name: "test user_name",
           first_name: "test first_name",
           user_email: "test email",
-          password: "1234567"
+          password: "12345"
         };
         return supertest(app)
           .post("/api/accounts")
@@ -113,7 +113,7 @@ describe("Users Endpoint", function () {
         return supertest(app)
           .post("/api/accounts")
           .send(duplicateUser)
-          .expect(400, { error: "Something went wrong. Please try again." });
+          .expect(400, { error: "Missing 'user_email' in request body" });
       });
     });
 

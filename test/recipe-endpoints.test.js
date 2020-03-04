@@ -25,16 +25,34 @@ describe("Recipe endpoints", function () {
         {
           id: 1,
           title: "Test Recipe 1",
+          owner: 1,
           recipe_description: "{\"instruction 1.1\",\"instruction 1.2\"}",
+          recipe_ingredients: "{\"Test Ingredient 1\",\"Test Ingredient 2\"}",
           time_to_make: "21",
-          recipe_owner: 1,
         },
         {
           id: 2,
           title: "Test Recipe 2",
+          owner: 1,
           recipe_description: "{\"instruction 2.1\",\"instruction 2.2\"}",
+          recipe_ingredients: "{\"Test Ingredient 3\",\"Test Ingredient 4\"}",
           time_to_make: "22",
-          recipe_owner: 1,
+        },
+        {
+          "id": 3,
+          "owner": 2,
+          "recipe_description": "{\"instruction 3.1\",\"instruction 3.2\"}",
+          "recipe_ingredients": "{\"Test Ingredient 1\",\"Test Ingredient 2\"}",
+          "time_to_make": "23",
+          "title": "Test Recipe 3"
+        },
+        {
+          "id": 4,
+          "owner": 2,
+          "recipe_description": "{\"instruction 4.1\",\"instruction 4.2\"}",
+          "recipe_ingredients": "{\"Test Ingredient 3\",\"Test Ingredient 4\"}",
+          "time_to_make": "24",
+          "title": "Test Recipe 4"
         }
       ];
 
@@ -71,10 +89,10 @@ describe("Recipe endpoints", function () {
     it("responds with 201 and creates a recipe", () => {
       const newRecipe = {
         title: "Test Recipe 5",
-        //recipe_ingredients: ["test ingredient 1", "test ingredient 2"],
-        recipe_description: '{"instruction 5.1", "instruction 5.2"}',
+        owner: 1,
+        recipe_description: "instruction 5.1",
+        recipe_ingredients: "Potatoes",
         time_to_make: 25,
-        recipe_owner: 1,
       };
 
       return supertest(app)
@@ -87,7 +105,7 @@ describe("Recipe endpoints", function () {
           expect(res.body.title).to.eql(newRecipe.title);
           expect(res.body.recipe_description).to.eql(newRecipe.recipe_description);
           expect(res.body.time_to_make).to.eql(JSON.stringify(newRecipe.time_to_make));
-          expect(res.body.recipe_owner).to.eql(newRecipe.recipe_owner);
+          expect(res.body.owner).to.eql(newRecipe.owner);
         })
         .expect(res =>
           db
@@ -99,36 +117,34 @@ describe("Recipe endpoints", function () {
               expect(row.title).to.eql(newRecipe.title);
               expect(row.recipe_description).to.eql(newRecipe.recipe_description);
               expect(row.time_to_make).to.eql(JSON.stringify(newRecipe.time_to_make));
-              expect(row.recipe_owner).to.eql(newRecipe.recipe_owner);
+              expect(row.owner).to.eql(newRecipe.owner);
             })
         );
     });
   });
 
-  describe("PATCH /api/recipes", () => {
+  describe("PATCH /api/recipes/edit/id", () => {
+
+    const updatedRecipe =
+    {
+      title: "Test Recipe 1 edited",
+      recipe_ingredients: ["test ingredient 1", "test ingredient 2"],
+      recipe_description: ["instruction 1.1", "instruction 1.2", "instruction 1.3"],
+      time_to_make: 30,
+    };
 
     beforeEach("insert users, recipes", () => {
       return helpers.seedRecipes(
         db,
         testUsers,
         testRecipes,
-
       );
     });
 
-    const updatedRecipe =
-    {
-      id: 1,
-      title: "Test Recipe 1 edited",
-      recipe_ingredients: ["test ingredient 1", "test ingredient 2"],
-      recipe_description: ["instruction 1.1", "instruction 1.2", "instruction 1.3"],
-      time_to_make: 30,
-      recipe_owner: 1,
-    };
 
     it("responds with 201 and updates a recipe", () => {
       return supertest(app)
-        .patch("/api/recipes/:1")
+        .patch("/api/recipes/edit/1")
         .set("Authorization", helpers.makeAuthHeader(testUser))
         .send(updatedRecipe)
         .expect(201)
@@ -151,7 +167,7 @@ describe("Recipe endpoints", function () {
       recipe_ingredients: ["Test Ingredient 1", "Test Ingredient 2"],
       recipe_description: ["instruction 1.1", "instruction 1.2"],
       time_to_make: 21,
-      recipe_owner: 1,
+      owner: 1,
     };
 
     it("responds with 204 and deletes a recipe", () => {

@@ -17,6 +17,5 @@ CREATE TABLE recipes (
   owner INTEGER REFERENCES accounts(id) ON DELETE CASCADE NOT NULL,
   recipe_description TEXT NOT NULL,
   recipe_ingredients TEXT NOT NULL,
-  time_to_make TEXT NOT NULL,
-  date_created TIMESTAMPTZ NOT NULL DEFAULT now()
+  time_to_make TEXT NOT NULL
 );

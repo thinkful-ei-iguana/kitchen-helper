@@ -33,7 +33,6 @@ recipeRouter.route("/user/owner").get((req, res, next) => {
           recipe_description: xss(recipe.recipe_description),
           recipe_ingredients: recipe.recipe_ingredients,
           time_to_make: recipe.time_to_make,
-          date_created: recipe.date_created,
           created_by: recipe.created_by
         });
       }
@@ -61,7 +60,6 @@ recipeRouter
             recipe_description: xss(recipe.recipe_description),
             recipe_ingredients: recipe.recipe_ingredients,
             time_to_make: recipe.time_to_make,
-            date_created: recipe.date_created,
             created_by: recipe.created_by
           });
         }
@@ -139,6 +137,7 @@ recipeRouter.route("/").post(bodyParser, (req, res, next) => {
 recipeRouter
   .route("/edit/id")
   .patch(bodyParser, (req, res, next) => {
+    console.log("made it here")
     const knexInstance = req.app.get("db");
     const { id } = req.params;
     let { title, recipe_description, recipe_ingredients, time_to_make } = req.body;

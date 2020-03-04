@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 const app = require('../src/app')
 const helpers = require('./test-helpers')
 
-describe.only('Auth Endpoints V1', function () {
+describe('Auth Endpoints V1', function () {
   let db
 
   const testUsers = helpers.makeUsersArray()
@@ -126,35 +126,35 @@ describe.only('Auth Endpoints V1', function () {
     })
   })
 
-  /**
-   * @description Refresh token
-   **/
-  describe(`PUT /api/auth/token`, () => {
-    beforeEach('insert users', () =>
-      helpers.seedUsers(
-        db,
-        testUsers,
-      )
-    )
+  // /**
+  //  * @description Refresh token
+  //  **/
+  // describe(`PUT /api/auth/token`, () => {
+  //   beforeEach('insert users', () =>
+  //     helpers.seedUsers(
+  //       db,
+  //       testUsers,
+  //     )
+  //   )
 
-    it(`responds 200 and JWT auth token using secret`, () => {
-      const subject = testUser.user_name;
-      const payload = {
-        user_id: testUser.id,
-        name: testUser.first_name,
-      }
-      const expectedToken = jwt.sign(payload, process.env.JWT_SECRET, {
-        subject,
-        algorithm: "HS256"
-      });
-      return supertest(app)
-        .put('/api/auth/token')
-        .set('Authorization', helpers.makeAuthHeader(testUser))
-        .set('Content-Type', 'application/json')
-        .set('Accept', 'application/json')
-        .expect(200, {
-          authToken: expectedToken,
-        })
-    })
-  })
+  //   it(`responds 200 and JWT auth token using secret`, () => {
+  //     const subject = testUser.user_name;
+  //     const payload = {
+  //       user_id: testUser.id,
+  //       name: testUser.first_name,
+  //     }
+  //     const expectedToken = jwt.sign(payload, process.env.JWT_SECRET, {
+  //       subject,
+  //       algorithm: "HS256"
+  //     });
+  //     return supertest(app)
+  //       .put('/api/auth/token')
+  //       .set('Authorization', helpers.makeAuthHeader(testUser))
+  //       .set('Content-Type', 'application/json')
+  //       .set('Accept', 'application/json')
+  //       .expect(200, {
+  //         authToken: expectedToken,
+  //       })
+  //   })
+  // })
 })

@@ -2,6 +2,7 @@ const express = require("express");
 const AuthService = require("./auth-service");
 const authRouter = express.Router();
 const jsonBodyParser = express.json();
+const requireAuth = require("../middleware/jwt-auth")
 
 authRouter.post("/login", jsonBodyParser, (req, res, next) => {
   const { user_name, password } = req.body;
@@ -37,5 +38,18 @@ authRouter.post("/login", jsonBodyParser, (req, res, next) => {
     })
     .catch(next);
 });
+
+authRouter
+  .put("/token", jsonBodyParser, (req, res, next) => {
+    console.log("made it here")
+    const sub = req.user.user_name;
+    const payload = {
+      user_id: req.user.id,
+      name: req.user.first_name,
+    };
+    res.send({
+      authToken: AuthService.createJwt(sub, payload),
+    });
+  });
 
 module.exports = authRouter;
