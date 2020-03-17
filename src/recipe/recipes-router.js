@@ -6,6 +6,7 @@ const recipeService = require("./recipes-service");
 const AccountService = require("../users/users-service");
 const xss = require("xss");
 const path = require("path");
+const _ = require("lodash")
 
 recipeRouter.route("/").get((req, res, next) => {
   const knexInstance = req.app.get("db");
@@ -144,7 +145,7 @@ recipeRouter
     let updatedRecipe = { title, recipe_description, recipe_ingredients, time_to_make };
     let recipeId = req.body.id;
     recipesService
-      .updateRecipe(req.app.get("db"), updatedRecipe, recipeId)
+      .updateRecipe(req.app(_.get((this, "db"), updatedRecipe, recipeId)))
       .then(updatedRecipeResponse => {
         res.status(201).json({
           title: updatedRecipeResponse.title,

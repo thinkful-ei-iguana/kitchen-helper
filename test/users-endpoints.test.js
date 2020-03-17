@@ -30,7 +30,7 @@ describe("Users Endpoint", function () {
         )
       );
 
-      const requiredFields = ["first_name", "user_name", "email", "password"];
+      const requiredFields = ["user_email"];
 
       requiredFields.forEach(field => {
         const registerAttemptBody = {
@@ -46,12 +46,12 @@ describe("Users Endpoint", function () {
             .post("/api/accounts")
             .send(registerAttemptBody)
             .expect(400, {
-              error: "Missing 'user_email' in request body",
+              error: `Missing 'user_email' in request body`,
             })
         });
       });
 
-      it("responds 400 'Password must be longer than 8 characters' when empty password", () => {
+      it("responds 400 'Password must be longer than 8 characters' when short password", () => {
         const userShortPassword = {
           user_name: "test user_name",
           first_name: "test first_name",
@@ -61,7 +61,9 @@ describe("Users Endpoint", function () {
         return supertest(app)
           .post("/api/accounts")
           .send(userShortPassword)
-          .expect(400, { error: "Password must be longer than 8 characters" });
+          .expect(400, {
+            error: 'Password must be longer than 8 characters'
+          });
       });
 
       it("responds 400 'Password must be less than 72 characters' when long password", () => {
@@ -89,7 +91,6 @@ describe("Users Endpoint", function () {
           .send(userPasswordStartsSpaces)
           .expect(400, { error: "Password must not start or end with empty spaces" });
       });
-
       it("responds 400 error when password ends with spaces", () => {
         const userPasswordEndsSpaces = {
           user_name: "test user_name",

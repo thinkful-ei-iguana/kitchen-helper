@@ -2,7 +2,15 @@ const knex = require("knex");
 const app = require("../src/app");
 const helpers = require("./test-helpers");
 
-describe("Recipe endpoints", function () {
+const updatedRecipe =
+{
+  title: "Test Recipe 1 edited",
+  recipe_ingredients: ["test ingredient 1", "test ingredient 2"],
+  recipe_description: ["instruction 1.1", "instruction 1.2", "instruction 1.3"],
+  time_to_make: 30,
+};
+
+describe.only("Recipe endpoints", function () {
   let db;
 
   const testUsers = helpers.makeUsersArray();
@@ -125,14 +133,6 @@ describe("Recipe endpoints", function () {
 
   describe("PATCH /api/recipes/edit/id", () => {
 
-    const updatedRecipe =
-    {
-      title: "Test Recipe 1 edited",
-      recipe_ingredients: ["test ingredient 1", "test ingredient 2"],
-      recipe_description: ["instruction 1.1", "instruction 1.2", "instruction 1.3"],
-      time_to_make: 30,
-    };
-
     beforeEach("insert users, recipes", () => {
       return helpers.seedRecipes(
         db,
@@ -141,10 +141,9 @@ describe("Recipe endpoints", function () {
       );
     });
 
-
     it("responds with 201 and updates a recipe", () => {
       return supertest(app)
-        .patch("/api/recipes/edit/1")
+        .patch("/api/recipes/edit/5")
         .set("Authorization", helpers.makeAuthHeader(testUser))
         .send(updatedRecipe)
         .expect(201)
