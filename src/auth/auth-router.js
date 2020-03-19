@@ -42,15 +42,13 @@ authRouter.post("/login", jsonBodyParser, (req, res, next) => {
 authRouter
   .put("/token", jsonBodyParser, (req, res, next) => {
     try {
-      console.log("this is request", req);
-      const sub = req.body.user.user_name;
-      console.log("this is sub", sub);
+      const subject = req.body.user.user_name;
       const payload = {
         user_id: req.body.user.id,
         name: req.body.user.first_name,
       };
       res.send({
-        authToken: AuthService.createJwt(sub, payload),
+        authToken: AuthService.createJwt(subject, payload),
       });
     }
     catch (error) { console.log(error) };

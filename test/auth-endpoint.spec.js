@@ -137,7 +137,17 @@ describe('Auth Endpoints V1', function () {
       )
     )
 
+
     it(`responds 200 and JWT auth token using secret`, () => {
+      // const sub = req.body.user.user_name;
+      // const payload = {
+      //   user_id: req.body.user.id,
+      //   name: req.body.user.first_name,
+      // };
+      // expectedToken = jwt.sign(payload, config.JWT_SECRET, {
+      //   sub,
+      //   algorithm: "HS256"
+      // });
       const subject = testUser.user_name;
       const payload = {
         user_id: testUser.id,
@@ -151,6 +161,7 @@ describe('Auth Endpoints V1', function () {
         .put('/api/auth/token')
         .send({
           user: {
+            id: 1,
             user_name: testUser.user_name,
             first_name: testUser.first_name,
             password: testUser.password,

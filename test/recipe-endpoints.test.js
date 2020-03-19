@@ -4,13 +4,14 @@ const helpers = require("./test-helpers");
 
 const updatedRecipe =
 {
+  id: 5,
   title: "Test Recipe 1 edited",
   recipe_ingredients: ["test ingredient 1", "test ingredient 2"],
   recipe_description: ["instruction 1.1", "instruction 1.2", "instruction 1.3"],
   time_to_make: 30,
 };
 
-describe.only("Recipe endpoints", function () {
+describe("Recipe endpoints", function () {
   let db;
 
   const testUsers = helpers.makeUsersArray();
