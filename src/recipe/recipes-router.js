@@ -140,23 +140,11 @@ recipeRouter
   .patch(bodyParser, (req, res, next) => {
     try {
       const knexInstance = req.app.get("db");
-      const { id } = req.params;
+      let { id } = req.params;
+      id = parseInt(id);
       let { title, recipe_description, recipe_ingredients, time_to_make } = req.body;
       let updatedRecipe = { title, recipe_description, recipe_ingredients, time_to_make };
       let recipeId = req.body.id;
-      recipeService
-        .updateRecipe(knexInstance, recipeId, updatedRecipe)
-        .then(updatedRecipeResponse => {
-          res.status(201).json({
-            title: updatedRecipeResponse.title,
-            recipe_description: updatedRecipeResponse.recipe_description,
-            recipe_ingredients: updatedRecipeResponse.recipe_ingredients,
-            time_to_make: updatedRecipeResponse.time_to_make
-          });
-        }).catch(err => {
-          console.log(err)
-          next(err);
-        });
 
       const numberOfValues = Object.values(updatedRecipe).filter(Boolean).length;
       if (numberOfValues === 0) {
@@ -167,11 +155,11 @@ recipeRouter
           }
         });
       }
-
+      console.log(updatedRecipe, typeof id, "updatedRecipe and id")
       recipeService
         .updateRecipe(knexInstance, id, updatedRecipe)
         .then(update => {
-          console.log(update);
+          console.log(update, "this is update");
           res.status(204).end();
         })
         .catch(next);
