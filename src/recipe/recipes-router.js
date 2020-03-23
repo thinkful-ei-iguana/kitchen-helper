@@ -155,11 +155,9 @@ recipeRouter
           }
         });
       }
-      console.log(updatedRecipe, typeof id, "updatedRecipe and id")
       recipeService
         .updateRecipe(knexInstance, id, updatedRecipe)
         .then(update => {
-          console.log(update, "this is update");
           res.status(204).end();
         })
         .catch(next);
